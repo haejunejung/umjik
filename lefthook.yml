@@ -1,0 +1,15 @@
+# https://github.com/evilmartians/lefthook
+# Install: pnpm add -D lefthook && pnpm exec lefthook install
+pre-commit:
+  parallel: false
+  commands:
+    # 1. Format staged files (re-stage after fix)
+    format:
+      glob: "*.{ts,tsx,json}"
+      run: pnpm exec oxfmt --write {staged_files}
+      stage_fixed: true
+    # 2. Lint — run when any file staged
+    lint:
+      glob: "*.{ts,tsx}"
+      run: pnpm exec oxlint --fix {staged_files}
+      stage_fixed: true

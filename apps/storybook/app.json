@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "umjik-storybook",
+    "slug": "umjik-storybook",
+    "android": {
+      "package": "com.haejune.umjikstorybook"
+    },
+    "ios": {
+      "bundleIdentifier": "com.haejune.umjikstorybook"
+    }
+  }
+}

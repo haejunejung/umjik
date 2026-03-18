@@ -6,7 +6,13 @@
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
     "format": "oxfmt --write .",
-    "format:check": "oxfmt --check ."
+    "format:check": "oxfmt --check .",
+    "test": "pnpm --filter umjik test",
+    "storybook": "pnpm --filter @umjik/storybook storybook",
+    "storybook:ios": "pnpm --filter @umjik/storybook storybook:ios",
+    "storybook:android": "pnpm --filter @umjik/storybook storybook:android",
+    "storybook:web": "pnpm --filter @umjik/storybook storybook:web",
+    "storybook:generate": "pnpm --filter @umjik/storybook storybook-generate"
   },
   "devDependencies": {
     "lefthook": "^2.1.1",
@@ -20,7 +26,12 @@
   "packageManager": "pnpm@10.28.2",
   "pnpm": {
     "overrides": {
-      "react-native": "0.81.5"
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-test-renderer": "^18.2.0",
+      "@types/react": "^18.2.6",
+      "@types/react-dom": "^18.2.0",
+      "react-native": "0.76.9"
     }
   }
 }

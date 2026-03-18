@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "description": "Animation library for React Native",
   "keywords": [
-    "umjik",
-    "motion",
+    "animation",
     "framer-motion",
-    "animation"
+    "motion",
+    "umjik"
   ],
   "license": "MIT",
   "files": [
@@ -30,17 +30,26 @@
     "dev": "vitest dev"
   },
   "devDependencies": {
+    "@storybook/react": "^8.3.5",
+    "@storybook/react-native": "^8.3.5",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
-    "@types/react": "^19.2.14",
-    "react": "^19.2.4",
+    "@testing-library/react-native": "^13.2.0",
+    "@types/react": "^18.2.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-native": "0.76.9",
+    "react-native-reanimated": "~3.16.7",
+    "react-test-renderer": "^18.2.0",
     "release-it": "^19.2.4",
     "rolldown": "1.0.0-rc.9",
     "rolldown-plugin-dts": "^0.22.5",
     "vitest": "^4.0.18"
   },
   "peerDependencies": {
-    "react": "^16.8 || ^17 || ^18 || ^19"
+    "react": "^18.2.0",
+    "react-native": ">=0.72.0",
+    "react-native-reanimated": "^3.0.0"
   },
   "engines": {
     "node": ">=20"

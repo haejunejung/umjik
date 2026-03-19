@@ -1,0 +1,70 @@
+---
+title: createMotionComponent
+description: Factory function to create animated versions of any React Native component
+---
+
+## Overview
+
+`createMotionComponent` wraps any React Native component with animation support.
+
+```tsx
+import { createMotionComponent } from 'umjik';
+import { Pressable } from 'react-native';
+
+const MotionPressable = createMotionComponent(Pressable);
+```
+
+## Signature
+
+```tsx
+function createMotionComponent<T>(component: T): MotionComponent<T>
+```
+
+**Parameters:**
+- `component` — Any React Native component (`View`, `Text`, `Pressable`, custom components, etc.)
+
+**Returns:** A new component that accepts all original props plus `MotionProps` (`initial`, `animate`, `exit`, `transition`, `variants`, `onAnimationComplete`).
+
+## Usage
+
+```tsx
+const MotionPressable = createMotionComponent(Pressable);
+
+<MotionPressable
+  animate={{ scale: 0.95 }}
+  transition={{ type: 'spring' }}
+  onPress={handlePress}
+>
+  <Text>Press me</Text>
+</MotionPressable>
+```
+
+## How It Works
+
+Internally, `createMotionComponent`:
+
+1. Calls `Animated.createAnimatedComponent(component)` once and caches the result
+2. Extracts animation props (`initial`, `animate`, `exit`, `transition`, `variants`)
+3. Passes them through the engine (variant resolution, property conversion, transition normalization)
+4. Executes animations via the Reanimated adapter
+5. Forwards all remaining props to the underlying animated component
+
+## Pre-built Components
+
+The `Motion` object is built using `createMotionComponent`:
+
+```tsx
+const Motion = {
+  View: createMotionComponent(View),
+  Text: createMotionComponent(Text),
+  Image: createMotionComponent(Image),
+  ScrollView: createMotionComponent(ScrollView),
+  create: createMotionComponent,
+};
+```
+
+Use `Motion.create` as a shorthand:
+
+```tsx
+const MotionPressable = Motion.create(Pressable);
+```

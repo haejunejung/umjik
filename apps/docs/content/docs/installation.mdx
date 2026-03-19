@@ -1,0 +1,49 @@
+---
+title: Installation
+description: How to install umjik in your React Native project
+---
+
+## Install umjik
+
+```bash
+npm install umjik
+# or
+yarn add umjik
+# or
+pnpm add umjik
+```
+
+## Peer Dependencies
+
+umjik requires `react-native-reanimated` >= 3.0.0 as a peer dependency.
+
+```bash
+npm install react-native-reanimated
+```
+
+Follow the [Reanimated installation guide](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/) to complete platform-specific setup (Babel plugin, native rebuild, etc.).
+
+## Requirements
+
+- React >= 18.0.0
+- React Native >= 0.72.0
+- react-native-reanimated >= 3.0.0
+
+## Verify Installation
+
+After installing, verify everything works with a simple animation:
+
+```tsx
+import { Motion } from 'umjik';
+
+export function Test() {
+  return (
+    <Motion.View
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    />
+  );
+}
+```
+
+If the view fades in on mount, you're all set.

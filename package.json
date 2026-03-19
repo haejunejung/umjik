@@ -12,7 +12,11 @@
     "storybook:ios": "pnpm --filter @umjik/storybook storybook:ios",
     "storybook:android": "pnpm --filter @umjik/storybook storybook:android",
     "storybook:web": "pnpm --filter @umjik/storybook storybook:web",
-    "storybook:generate": "pnpm --filter @umjik/storybook storybook-generate"
+    "storybook:generate": "pnpm --filter @umjik/storybook storybook-generate",
+    "docs": "pnpm --filter @umjik/docs dev",
+    "docs:build": "pnpm --filter @umjik/docs build",
+    "build": "pnpm --filter umjik build",
+    "deploy": "pnpm run test && pnpm run lint && pnpm run build && pnpm --filter umjik publish"
   },
   "devDependencies": {
     "lefthook": "^2.1.1",

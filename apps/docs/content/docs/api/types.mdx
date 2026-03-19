@@ -1,0 +1,121 @@
+---
+title: Types
+description: TypeScript type definitions for umjik
+---
+
+## AnimationState
+
+Animatable style properties. Supports framer-motion shorthand properties that are internally converted to React Native equivalents.
+
+```tsx
+interface AnimationState {
+  // Shorthand (converted internally)
+  x?: number;           // → translateX
+  y?: number;           // → translateY
+  rotate?: number;      // → rotate with 'deg' unit
+  scale?: number;
+  scaleX?: number;
+  scaleY?: number;
+
+  // React Native properties (used directly)
+  opacity?: number;
+  translateX?: number;
+  translateY?: number;
+  backgroundColor?: string;
+  width?: number;
+  height?: number;
+  borderRadius?: number;
+  borderWidth?: number;
+}
+```
+
+When both `x` and `translateX` are specified, `x` takes priority (framer-motion convention).
+
+## TransitionConfig
+
+Controls how animations are performed.
+
+```tsx
+interface TransitionConfig {
+  // Animation type
+  type?: 'timing' | 'spring';
+
+  // Timing options
+  duration?: number;             // seconds (converted to ms internally)
+  easing?: EasingFunction;
+
+  // Spring options (physics-based)
+  stiffness?: number;            // default: 100
+  damping?: number;              // default: 10
+  mass?: number;                 // default: 1
+
+  // Spring options (duration-based)
+  bounce?: number;               // 0 to 1
+
+  // Common
+  delay?: number;                // seconds
+
+  // Per-property overrides
+  [property: string]: TransitionConfig | any;
+}
+```
+
+### Smart Defaults
+
+When `type` is not specified, umjik follows framer-motion's convention:
+
+| Property type | Default `type` | Default `duration` |
+|---|---|---|
+| Physical (`x`, `y`, `scale`, `rotate`) | `spring` | — |
+| Non-physical (`opacity`, `backgroundColor`) | `timing` | 0.3s |
+
+### Per-Property Transitions
+
+Override transition settings for individual properties:
+
+```tsx
+<Motion.View
+  animate={{ opacity: 1, x: 100 }}
+  transition={{
+    duration: 0.3,
+    x: { type: 'spring', stiffness: 200 },
+    opacity: { duration: 0.5 },
+  }}
+/>
+```
+
+## EasingFunction
+
+```tsx
+type EasingFunction =
+  | 'linear'
+  | 'easeIn'
+  | 'easeOut'
+  | 'easeInOut'
+  | [number, number, number, number];  // cubic-bezier
+```
+
+## MotionProps
+
+Props accepted by all Motion components, in addition to the base component's props.
+
+```tsx
+interface MotionProps {
+  initial?: AnimationState | string | boolean;
+  animate?: AnimationState | string;
+  exit?: AnimationState | string;
+  transition?: TransitionConfig;
+  variants?: Record<string, AnimationState>;
+  onAnimationComplete?: () => void;
+}
+```
+
+## AnimatePresenceProps
+
+```tsx
+interface AnimatePresenceProps {
+  children: React.ReactNode;
+  mode?: 'sync' | 'wait';
+  onExitComplete?: () => void;
+}
+```

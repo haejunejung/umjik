@@ -1,0 +1,95 @@
+---
+title: Quick Start
+description: Get up and running with umjik in minutes
+---
+
+## Basic Animation
+
+Animate any React Native component by wrapping it with `Motion`:
+
+```tsx
+import { Motion } from 'umjik';
+
+<Motion.View
+  initial={{ opacity: 0, scale: 0.8 }}
+  animate={{ opacity: 1, scale: 1 }}
+/>
+```
+
+- `initial` — the starting state when the component mounts
+- `animate` — the target state to animate towards
+
+## Transitions
+
+Control how animations behave with the `transition` prop:
+
+```tsx
+// Timing animation (default for opacity)
+<Motion.View
+  animate={{ opacity: 1 }}
+  transition={{ duration: 0.5 }}
+/>
+
+// Spring animation (default for physical properties)
+<Motion.View
+  animate={{ x: 100 }}
+  transition={{ type: 'spring', stiffness: 120, damping: 14 }}
+/>
+```
+
+umjik uses smart defaults like framer-motion: physical properties (`x`, `y`, `scale`, `rotate`) default to spring animations, while non-physical properties (`opacity`, `backgroundColor`) default to timing.
+
+## Variants
+
+Define reusable animation states with variants:
+
+```tsx
+const card = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
+<Motion.View
+  variants={card}
+  initial="hidden"
+  animate="visible"
+/>
+```
+
+## Exit Animations
+
+Use `AnimatePresence` to animate components when they unmount:
+
+```tsx
+import { Motion, AnimatePresence } from 'umjik';
+
+<AnimatePresence>
+  {isVisible && (
+    <Motion.View
+      key="modal"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 50 }}
+    />
+  )}
+</AnimatePresence>
+```
+
+The `exit` prop defines the animation that plays before the component is removed from the tree. Children inside `AnimatePresence` must have a unique `key`.
+
+## Custom Components
+
+Wrap any React Native component with `createMotionComponent`:
+
+```tsx
+import { createMotionComponent } from 'umjik';
+import { Pressable } from 'react-native';
+
+const MotionPressable = createMotionComponent(Pressable);
+
+<MotionPressable
+  animate={{ scale: 0.95 }}
+  transition={{ type: 'spring' }}
+  onPress={handlePress}
+/>
+```

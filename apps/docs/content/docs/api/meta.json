@@ -1,0 +1,11 @@
+{
+  "title": "API",
+  "root": true,
+  "pages": [
+    "index",
+    "motion",
+    "create-motion-component",
+    "animate-presence",
+    "types"
+  ]
+}

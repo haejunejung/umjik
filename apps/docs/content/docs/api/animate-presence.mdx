@@ -1,0 +1,83 @@
+---
+title: AnimatePresence
+description: Animate components when they are removed from the React tree
+---
+
+## Overview
+
+`AnimatePresence` enables exit animations. It tracks which children are mounted and keeps exiting children in the tree until their `exit` animation completes.
+
+```tsx
+import { Motion, AnimatePresence } from 'umjik';
+
+<AnimatePresence>
+  {isVisible && (
+    <Motion.View
+      key="modal"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 50 }}
+    />
+  )}
+</AnimatePresence>
+```
+
+## Props
+
+### `children`
+
+```tsx
+children: React.ReactNode
+```
+
+Children must have a unique `key` prop for `AnimatePresence` to track their lifecycle.
+
+### `mode`
+
+```tsx
+mode?: 'sync' | 'wait'
+```
+
+Controls how entering and exiting children are coordinated.
+
+- **`'sync'`** (default) — Entering and exiting animations play simultaneously
+- **`'wait'`** — The exiting child completes its animation before the entering child mounts
+
+```tsx
+// Wait for exit before entering
+<AnimatePresence mode="wait">
+  <Motion.View key={currentPage} ... />
+</AnimatePresence>
+```
+
+### `onExitComplete`
+
+```tsx
+onExitComplete?: () => void
+```
+
+Called when all exit animations have finished.
+
+```tsx
+<AnimatePresence onExitComplete={() => console.log('all exits done')}>
+  ...
+</AnimatePresence>
+```
+
+## How It Works
+
+```
+1. AnimatePresence compares current and previous children
+2. Removed children are marked as "exiting" and kept in the render tree
+3. Each child receives its status via PresenceContext
+4. Motion components read the context: if "exiting", animate to `exit` state
+5. When exit animation completes, the child calls onExitComplete
+6. AnimatePresence removes the child from the tree
+7. React performs the actual unmount
+```
+
+## Rules
+
+- Children inside `AnimatePresence` **must** have a unique `key`
+- The `exit` prop only works on Motion components that are **direct children** of `AnimatePresence`
+- `mode="wait"` delays the entering animation — use it for page transitions where overlap looks wrong

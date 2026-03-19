@@ -1,0 +1,113 @@
+---
+title: Introduction
+description: A declarative animation library for React Native with framer-motion compatible API
+---
+
+## What is umjik?
+
+umjik is a declarative animation library for React Native that brings the simplicity of [framer-motion](https://motion.dev) to mobile development. It provides a framer-motion compatible API powered by [Reanimated 3](https://docs.swmansion.com/react-native-reanimated/), enabling high-performance 60fps animations with minimal boilerplate.
+
+## The Problem
+
+Creating animations in React Native with Reanimated requires excessive boilerplate. Even a simple fade-in needs `useSharedValue`, `useAnimatedStyle`, and `withTiming`:
+
+```tsx
+// Reanimated: verbose setup for a simple fade-in
+function FadeIn({ children }) {
+  const opacity = useSharedValue(0);
+  useEffect(() => {
+    opacity.value = withTiming(1, { duration: 300 });
+  }, []);
+  const style = useAnimatedStyle(() => ({ opacity: opacity.value }));
+  return <Animated.View style={style}>{children}</Animated.View>;
+}
+```
+
+On the web, framer-motion solved this problem elegantly:
+
+```tsx
+// framer-motion: declarative and concise
+<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} />
+```
+
+But framer-motion is web-only. **umjik bridges this gap for React Native.**
+
+## With umjik
+
+```tsx
+import { Motion, AnimatePresence } from 'umjik';
+
+<AnimatePresence>
+  {isVisible && (
+    <Motion.View
+      key="card"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ type: 'spring', stiffness: 100 }}
+    />
+  )}
+</AnimatePresence>
+```
+
+## Why framer-motion Compatible API?
+
+1. **AI Code Generation** — framer-motion has 30M+ monthly npm downloads. LLMs trained on this data generate more accurate code when the API is identical.
+2. **Web to Mobile Migration** — Port framer-motion animations from web to React Native with minimal changes.
+3. **Existing Resources** — Leverage framer-motion's extensive documentation, examples, and tutorials.
+
+## Comparison
+
+| | Moti | Legend Motion | **umjik** |
+|---|---|---|---|
+| API | Custom | framer-motion-like | framer-motion compatible |
+| Engine | Reanimated | Built-in Animated | Reanimated 3 |
+| Maintenance | Inactive | Active | Active |
+| Key Limitation | API incompatible | Performance constraints | — |
+
+## Features (v0.1)
+
+- `initial` — Initial state on mount
+- `animate` — Target animation state
+- `exit` — Unmount animation
+- `transition` — Animation configuration (timing, spring)
+- `variants` — Named animation states
+- `AnimatePresence` — Unmount control for exit animations
+
+## Installation
+
+```bash
+npm install umjik
+# or
+yarn add umjik
+# or
+pnpm add umjik
+```
+
+### Peer Dependencies
+
+umjik requires the following peer dependencies:
+
+```bash
+npm install react-native-reanimated
+```
+
+> **Note:** `react-native-reanimated` >= 3.0.0 is required. Follow the [Reanimated installation guide](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/) for your platform.
+
+## Quick Start
+
+```tsx
+import { Motion } from 'umjik';
+
+export function MyComponent() {
+  return (
+    <Motion.View
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ type: 'spring', damping: 15 }}
+    >
+      {/* your content */}
+    </Motion.View>
+  );
+}
+```

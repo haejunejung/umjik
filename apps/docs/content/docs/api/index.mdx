@@ -1,0 +1,39 @@
+---
+title: API Overview
+description: umjik API reference
+---
+
+## Exports
+
+umjik exports three main APIs:
+
+```tsx
+import { Motion, AnimatePresence, createMotionComponent } from 'umjik';
+```
+
+| Export | Description |
+|---|---|
+| [`Motion`](/docs/api/motion) | Pre-built animated components (`Motion.View`, `Motion.Text`, etc.) |
+| [`createMotionComponent`](/docs/api/create-motion-component) | Factory to wrap any RN component with animation support |
+| [`AnimatePresence`](/docs/api/animate-presence) | Controls exit animations for unmounting children |
+
+## Design Principle
+
+The user-facing API follows framer-motion. Internally, umjik converts everything to React Native / Reanimated conventions:
+
+| User writes | umjik converts to |
+|---|---|
+| `x: 100` | `translateX: 100` |
+| `y: -20` | `translateY: -20` |
+| `rotate: 90` | `rotate: '90deg'` |
+| `duration: 0.3` (seconds) | `duration: 300` (milliseconds) |
+
+## Unsupported Features
+
+Props not yet supported in v0.1 will log a dev-mode warning:
+
+```
+[umjik] "whileTap" is not yet supported. It will be available in a future version.
+```
+
+In production, unsupported props are silently ignored.

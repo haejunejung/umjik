@@ -1,0 +1,156 @@
+---
+title: Motion
+description: Pre-built animated components for React Native
+---
+
+## Overview
+
+`Motion` provides animated versions of common React Native components.
+
+```tsx
+import { Motion } from 'umjik';
+
+<Motion.View initial={{ opacity: 0 }} animate={{ opacity: 1 }} />
+```
+
+## Available Components
+
+| Component | Base Component |
+|---|---|
+| `Motion.View` | `View` |
+| `Motion.Text` | `Text` |
+| `Motion.Image` | `Image` |
+| `Motion.ScrollView` | `ScrollView` |
+| `Motion.create` | `createMotionComponent` (factory) |
+
+Each component is the result of `createMotionComponent(BaseComponent)`. There is no special internal logic — `Motion.View` is equivalent to `createMotionComponent(View)`.
+
+## Props
+
+All Motion components accept the standard props of their base component, plus:
+
+### `initial`
+
+```tsx
+initial?: AnimationState | string | boolean
+```
+
+The starting state when the component mounts. If set to `false`, the component skips the initial animation and starts directly at the `animate` state.
+
+```tsx
+<Motion.View initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} />
+
+// Skip mount animation
+<Motion.View initial={false} animate={{ opacity: 1 }} />
+
+// Use a variant name
+<Motion.View variants={variants} initial="hidden" animate="visible" />
+```
+
+### `animate`
+
+```tsx
+animate?: AnimationState | string
+```
+
+The target animation state. When this value changes, the component animates to the new state.
+
+```tsx
+<Motion.View animate={{ opacity: 1, scale: 1 }} />
+
+// With variant
+<Motion.View variants={variants} animate="visible" />
+```
+
+### `exit`
+
+```tsx
+exit?: AnimationState | string
+```
+
+The animation to play when the component is removed from the tree. Only works inside an `AnimatePresence`.
+
+```tsx
+<AnimatePresence>
+  {show && (
+    <Motion.View
+      key="card"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    />
+  )}
+</AnimatePresence>
+```
+
+### `transition`
+
+```tsx
+transition?: TransitionConfig
+```
+
+Controls how animations are performed. See [Types](/docs/api/types) for the full `TransitionConfig` definition.
+
+```tsx
+// Timing
+<Motion.View
+  animate={{ opacity: 1 }}
+  transition={{ duration: 0.5, easing: 'easeOut' }}
+/>
+
+// Spring
+<Motion.View
+  animate={{ x: 100 }}
+  transition={{ type: 'spring', stiffness: 120, damping: 14 }}
+/>
+
+// Per-property
+<Motion.View
+  animate={{ opacity: 1, x: 100 }}
+  transition={{
+    duration: 0.3,
+    x: { type: 'spring', stiffness: 200 },
+  }}
+/>
+```
+
+### `variants`
+
+```tsx
+variants?: Record<string, AnimationState>
+```
+
+A map of named animation states. When `initial`, `animate`, or `exit` is a string, it resolves from this map.
+
+```tsx
+const card = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
+<Motion.View variants={card} initial="hidden" animate="visible" exit="hidden" />
+```
+
+Variants can include their own `transition`, which takes priority over the top-level `transition` prop:
+
+```tsx
+const card = {
+  hidden: { opacity: 0, transition: { duration: 0.2 } },
+  visible: { opacity: 1, transition: { type: 'spring' } },
+};
+```
+
+### `onAnimationComplete`
+
+```tsx
+onAnimationComplete?: () => void
+```
+
+Called when all animations for the current `animate` state have finished.
+
+```tsx
+<Motion.View
+  animate={{ opacity: 1 }}
+  onAnimationComplete={() => console.log('done')}
+/>
+```

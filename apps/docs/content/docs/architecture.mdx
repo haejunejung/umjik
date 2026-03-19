@@ -1,0 +1,77 @@
+---
+title: Architecture
+description: How umjik works internally — three layers that separate concerns
+---
+
+## Three Layers
+
+umjik separates concerns into three layers, each with a different reason to change:
+
+```
+┌────────────────────────────────────────────────┐
+│  Public API Layer                              │
+│  Motion.View, AnimatePresence,                 │
+│  createMotionComponent                         │
+│  → Receives user props, delegates to Engine    │
+└────────────────────┬───────────────────────────┘
+                     │
+┌────────────────────▼───────────────────────────┐
+│  Animation Engine Layer                        │
+│  resolveAnimation, resolveTransition,          │
+│  resolveVariants, diffState                    │
+│  → Pure functions. No platform dependency.     │
+└────────────────────┬───────────────────────────┘
+                     │
+┌────────────────────▼───────────────────────────┐
+│  Platform Adapter Layer                        │
+│  useReanimatedAdapter                          │
+│  → Executes animations via Reanimated API      │
+└────────────────────────────────────────────────┘
+```
+
+**Why separate?** Each layer changes for different reasons:
+
+- **Public API** changes when framer-motion updates its API
+- **Engine** changes when adding property support or fixing conversion bugs
+- **Adapter** changes when Reanimated has a major update
+
+## Data Flow
+
+When you write:
+
+```tsx
+<Motion.View
+  animate={{ x: 100, opacity: 1 }}
+  transition={{ duration: 0.3 }}
+/>
+```
+
+Here's what happens internally:
+
+1. **createMotionComponent** extracts `initial`, `animate`, `exit`, `transition`, `variants` from props
+2. **resolveVariants** — if `animate` is a string, resolves it from `variants` to a style object
+3. **resolveAnimation** — converts framer-motion naming to React Native (`x` → `translateX`, `rotate: 90` → `'90deg'`)
+4. **resolveTransition** — normalizes transition config (seconds → milliseconds, applies smart defaults)
+5. **diffState** — compares previous and current state, extracts only changed properties
+6. **useReanimatedAdapter** — executes animations using Reanimated's `withTiming` / `withSpring`
+
+## Engine Modules
+
+All engine modules are pure functions with no platform dependencies. They are fully unit-testable without mocks.
+
+| Module | Input | Output |
+|---|---|---|
+| `resolveVariants` | variant name + variants map | style object |
+| `resolveAnimation` | framer-motion style | React Native style |
+| `resolveTransition` | transition config + property name | normalized config (ms, defaults) |
+| `diffState` | previous state + next state | array of changed properties |
+
+## Property Conversion
+
+| User Input | Internal Conversion | Reason |
+|---|---|---|
+| `x: 100` | `translateX: 100` | RN uses transform naming |
+| `y: -20` | `translateY: -20` | RN uses transform naming |
+| `rotate: 90` | `rotate: '90deg'` | RN requires string units |
+| `scale: 1.2` | `scale: 1.2` | No conversion needed |
+| `duration: 0.3` | `duration: 300` | framer-motion uses seconds, Reanimated uses ms |

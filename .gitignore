@@ -13,7 +13,7 @@ out
 out/
 
 # Fumadocs MDX generated
-docs/.source
+.source
 
 # Testing & coverage
 coverage

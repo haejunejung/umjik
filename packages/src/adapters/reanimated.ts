@@ -12,6 +12,21 @@ import { StateDiff, EasingFunction } from "../types/animation"
 
 type SharedValue<T> = { value: T }
 
+// -- Animatable property defaults --
+// To add a new property: add default here, add useSharedValue call, add to sharedValues map, add to useAnimatedStyle.
+const DEFAULTS = {
+  translateX: 0,
+  translateY: 0,
+  scale: 1,
+  scaleX: 1,
+  scaleY: 1,
+  rotate: 0,
+  opacity: 1,
+  width: 0,
+  height: 0,
+  borderRadius: 0,
+} as const
+
 function mapEasing(easing: EasingFunction | undefined) {
   if (!easing) return Easing.inOut(Easing.ease)
   if (Array.isArray(easing)) return Easing.bezier(easing[0], easing[1], easing[2], easing[3])
@@ -30,16 +45,16 @@ function mapEasing(easing: EasingFunction | undefined) {
 }
 
 export function useReanimatedAdapter(diffs: StateDiff[], options?: { onComplete?: () => void }) {
-  const translateX = useSharedValue(0)
-  const translateY = useSharedValue(0)
-  const scale = useSharedValue(1)
-  const scaleX = useSharedValue(1)
-  const scaleY = useSharedValue(1)
-  const rotate = useSharedValue(0)
-  const opacity = useSharedValue(1)
-  const width = useSharedValue(0)
-  const height = useSharedValue(0)
-  const borderRadius = useSharedValue(0)
+  const translateX = useSharedValue(DEFAULTS.translateX)
+  const translateY = useSharedValue(DEFAULTS.translateY)
+  const scale = useSharedValue(DEFAULTS.scale)
+  const scaleX = useSharedValue(DEFAULTS.scaleX)
+  const scaleY = useSharedValue(DEFAULTS.scaleY)
+  const rotate = useSharedValue(DEFAULTS.rotate)
+  const opacity = useSharedValue(DEFAULTS.opacity)
+  const width = useSharedValue(DEFAULTS.width)
+  const height = useSharedValue(DEFAULTS.height)
+  const borderRadius = useSharedValue(DEFAULTS.borderRadius)
 
   const sharedValues = useMemo<Record<string, SharedValue<number>>>(
     () => ({
